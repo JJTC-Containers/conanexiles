@@ -20,16 +20,24 @@ RUN dpkg --add-architecture i386 \
     && apt-get install --no-install-recommends --assume-yes winehq-staging \
     && pip3 install python-valve \
     && apt-get clean \
-    && rm -rf winehq.key /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf winehq.key /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
+    && echo $TIMEZONE > /etc/timezone
 
 COPY . ./
 
-RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime \
-    && echo $TIMEZONE > /etc/timezone \
-    && chmod +x /entrypoint.sh \
+RUN chmod +x /entrypoint.sh \
     && cd /usr/bin/ \
-    && chmod +x conanexiles_controller rconcli steamcmd_setup
-    
+    && chmod +x conanexiles_controller rconcli steamcmd_setup \
+    # Create steam user and group
+    && useradd -ms /bin/bash steam \
+    # Ensure steam user got permission
+    && touch /bash.bashrc \
+    && mkdir /conanexiles /steamcmd /wine \
+    && chown steam -cR /conanexiles /steamcmd /wine /bash.bashrc /etc/supervisor/conf.d/
+
+USER steam
+
 EXPOSE 7777/udp 27015/udp 27016/udp 37015/udp 37016/udp
 
 VOLUME ["/conanexiles"]
