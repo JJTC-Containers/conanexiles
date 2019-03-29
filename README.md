@@ -47,7 +47,7 @@ version: "3.5"
 services:
   ce0:
     build: src/
-    image: jjtc/conan_exiles:1.3
+    image: jjtc/conan_exiles:1.5.0
     restart: unless-stopped
     environment:
       - "CONANEXILES_ServerSettings_ServerSettings_AdminPassword=ThanksForThisSmartSolution"

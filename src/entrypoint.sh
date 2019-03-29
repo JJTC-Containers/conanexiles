@@ -282,8 +282,6 @@ grep "${_bashrc_tag_start}" /etc/bash.bashrc > /dev/null
 [[ $? != 0 ]] && setup_bashrc
 
 # Initial Installation
-steamcmd_setup
-
 setup_server_config_first_time
 
 override_config
